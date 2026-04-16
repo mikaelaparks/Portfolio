@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Mikaela Parks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0a0a0b;
+  --surface:  #111113;
+  --surface2: #18181b;
+  --border:   rgba(255,255,255,0.07);
+  --text:     #e8e4dc;
+  --muted:    #6b6860;
+  --accent:   #ca1237;
+  --accent2:  #a60f2d;
+  --serif:    'Cormorant Garamond', Georgia, serif;
+  --sans:     'Syne', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* GRAIN */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 1000;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  position: fixed; top: 0; left: 0;
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .25s, height .25s;
+}
+.cursor-ring {
+  position: fixed; top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(232,103,58,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: width .3s, height .3s, border-color .3s;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.5rem 3rem;
+  background: linear-gradient(to bottom, rgba(10,10,11,0.96), transparent);
+}
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1.2rem; font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--text); text-decoration: none;
+}
+.nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+.nav-links a {
+  font-size: 0.72rem; letter-spacing: 0.16em;
+  text-transform: uppercase; text-decoration: none;
+  color: var(--muted); transition: color .2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links .cta {
+  color: var(--accent);
+  border: 1px solid rgba(232,103,58,.35);
+  padding: .45rem 1.1rem; border-radius: 2px;
+}
+.nav-links .cta:hover { background: rgba(232,103,58,.1); color: var(--accent); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 3rem 5rem;
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 40%, rgba(232,103,58,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(212,168,83,.05) 0%, transparent 60%);
+}
+.hero-vline {
+  position: absolute; top: 0; left: 3rem; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--border) 30%, var(--border) 70%, transparent);
+}
+.hero-vline.r { left: auto; right: 3rem; }
+.hero-eyebrow {
+  font-size: .75rem; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 2rem;
+  display: flex; align-items: center; gap: 1rem;
+  position: relative; z-index: 1;
+}
+.hero-eyebrow::before { content:''; display:block; width:40px; height:1px; background:var(--accent); }
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(3.5rem, 8vw, 8rem);
+  font-weight: 300; line-height: .95;
+  letter-spacing: -.01em; margin-bottom: 3rem;
+  max-width: 900px;
+  animation: fadeUp 1s ease both;
+  position: relative; z-index: 1;
+}
+.hero-title em { font-style: italic; color: var(--accent); }
+.hero-title .dim { color: var(--muted); }
+.hero-bottom {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 2rem; flex-wrap: wrap;
+  animation: fadeUp 1s .15s ease both;
+  position: relative; z-index: 1;
+}
+.hero-desc { font-size: .95rem; color: var(--muted); max-width: 380px; line-height: 1.8; }
+.hero-scroll {
+  display: flex; align-items: center; gap: .75rem;
+  font-size: .7rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted);
+  text-decoration: none;
+}
+.scroll-line {
+  width: 1px; height: 50px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+/* MARQUEE */
+.marquee-bar {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0; overflow: hidden; white-space: nowrap;
+}
+.marquee-track { display: inline-flex; animation: marquee 25s linear infinite; }
+.marquee-track span { font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); padding: 0 2.5rem; }
+.marquee-track .sep { color: var(--accent); }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* WORK SECTION */
+#work { padding: 7rem 3rem; max-width: 1400px; margin: 0 auto; }
+
+.section-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 4rem; }
+.section-tag {
+  font-size: .65rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--accent); border: 1px solid rgba(232,103,58,.3);
+  padding: .3rem .8rem; border-radius: 2px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 300; line-height: 1.1;
+}
+.section-title em { font-style: italic; color: var(--muted); }
+
+/* Work grid layout */
+.work-featured {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px; margin-bottom: 2px;
+}
+.work-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+/* Individual card */
+.work-card {
+  position: relative; overflow: hidden;
+  background: var(--surface2); cursor: none;
+}
+.work-featured .work-card { aspect-ratio: 4/3; }
+.work-grid .work-card { aspect-ratio: 1/1; }
+.work-grid .work-card.tall { aspect-ratio: 3/4; }
+
+/* Image (replace placeholder with <img class="work-img"> */
+.work-img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform .7s cubic-bezier(.25,.46,.45,.94);
+}
+.work-ph {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: .75rem;
+  transition: transform .7s cubic-bezier(.25,.46,.45,.94);
+  position: relative;
+}
+.work-ph::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(232,103,58,.04) 0%, transparent 60%);
+}
+.ph-label {
+  font-size: .62rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted);
+}
+
+/* Adobe-style frame: thin inset border */
+.work-card::before {
+  content:''; position:absolute; inset:0; z-index:2;
+  border: 1px solid rgba(255,255,255,.04);
+  transition: border-color .3s;
+  pointer-events: none;
+}
+.work-card:hover::before { border-color: rgba(232,103,58,.28); }
+
+/* Corner brackets */
+.work-card::after {
+  content:''; position:absolute;
+  top:12px; left:12px;
+  width:20px; height:20px;
+  border-top: 1px solid var(--accent);
+  border-left: 1px solid var(--accent);
+  opacity:0; z-index:3;
+  transition: opacity .3s, top .3s, left .3s;
+}
+.work-card:hover::after { opacity:1; top:16px; left:16px; }
+.cbr {
+  position:absolute; bottom:12px; right:12px;
+  width:20px; height:20px;
+  border-bottom: 1px solid var(--accent);
+  border-right: 1px solid var(--accent);
+  opacity:0; z-index:3;
+  transition: opacity .3s, bottom .3s, right .3s;
+}
+.work-card:hover .cbr { opacity:1; bottom:16px; right:16px; }
+
+/* Overlay info */
+.work-overlay {
+  position:absolute; inset:0; z-index:4;
+  background: linear-gradient(to top, rgba(10,10,11,.93) 0%, rgba(10,10,11,.18) 55%, transparent 100%);
+  opacity:0; transition: opacity .4s;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding:1.75rem;
+}
+.work-card:hover .work-overlay { opacity:1; }
+.work-card:hover .work-img,
+.work-card:hover .work-ph { transform: scale(1.04); }
+
+.work-tags { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:.6rem; }
+.work-tag {
+  font-size:.6rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); border:1px solid rgba(232,103,58,.4);
+  padding:.2rem .55rem; border-radius:2px;
+}
+.work-name {
+  font-family:var(--serif); font-size:1.4rem;
+  font-weight:300; line-height:1.2; margin-bottom:.4rem;
+}
+.work-desc { font-size:.78rem; color:rgba(232,228,220,.5); line-height:1.6; }
+
+/* ABOUT */
+#about {
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:7rem 3rem;
+}
+.about-inner {
+  max-width:1200px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1.6fr;
+  gap:6rem; align-items:start;
+}
+.photo-wrap {
+  aspect-ratio:3/4; background:var(--surface2);
+  overflow:hidden; position:relative;
+}
+.photo-wrap img { width:100%; height:100%; object-fit:cover; }
+.photo-ph {
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.65rem; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--muted);
+}
+.photo-wrap::after {
+  content:''; position:absolute; inset:0;
+  border:1px solid rgba(255,255,255,.05); pointer-events:none;
+}
+.photo-accent {
+  position:absolute; bottom:-1.5rem; right:-1.5rem;
+  width:80%; height:80%;
+  border:1px solid rgba(232,103,58,.18); z-index:-1;
+}
+.about-photo { position:relative; }
+
+.about-text p { color:var(--muted); margin-bottom:1.5rem; font-size:.95rem; line-height:1.9; }
+.about-text p:first-of-type {
+  font-family:var(--serif); font-size:1.35rem;
+  color:var(--text); font-weight:300; line-height:1.5;
+}
+
+.tools-grid {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:1px; background:var(--border);
+  margin-top:2.5rem; border:1px solid var(--border);
+}
+.tool-item { background:var(--bg); padding:1.1rem 1rem; text-align:center; }
+.tool-icon { font-size:1.1rem; font-weight:700; margin-bottom:.35rem; display:block; color:var(--text); }
+.tool-name { font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+
+/* SERVICES */
+#services { padding:7rem 3rem; max-width:1200px; margin:0 auto; }
+.services-list { display:flex; flex-direction:column; }
+.service-item {
+  display:grid; grid-template-columns:80px 1fr auto;
+  align-items:center; gap:3rem;
+  padding:2.25rem 0;
+  border-bottom:1px solid var(--border);
+  transition:padding .3s;
+}
+.service-item:first-child { border-top:1px solid var(--border); }
+.service-num { font-family:var(--serif); font-size:.85rem; color:var(--muted); font-style:italic; }
+.service-name {
+  font-family:var(--serif); font-size:clamp(1.4rem,2.5vw,2rem);
+  font-weight:300; transition:color .2s;
+}
+.service-item:hover .service-name { color:var(--accent); }
+.service-tags { display:flex; gap:.5rem; flex-wrap:wrap; justify-content:flex-end; }
+.service-tag {
+  font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted); border:1px solid var(--border);
+  padding:.25rem .6rem; border-radius:2px;
+}
+
+/* CONTACT */
+#contact {
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  padding:7rem 3rem; text-align:center;
+}
+.contact-inner { max-width:640px; margin:0 auto; }
+.contact-inner .section-header { justify-content:center; }
+.contact-title {
+  font-family:var(--serif);
+  font-size:clamp(2.5rem,5vw,5rem);
+  font-weight:300; line-height:1.1; margin-bottom:2rem;
+}
+.contact-title em { font-style:italic; color:var(--accent); }
+.contact-sub { color:var(--muted); margin-bottom:3rem; font-size:.95rem; line-height:1.8; }
+.contact-email {
+  display:inline-block;
+  font-family:var(--serif); font-size:clamp(1.2rem,2vw,1.8rem);
+  font-weight:300; color:var(--text); text-decoration:none;
+  border-bottom:1px solid rgba(232,103,58,.4);
+  padding-bottom:6px; letter-spacing:.02em;
+  transition:color .2s, border-color .2s; margin-bottom:3rem;
+}
+.contact-email:hover { color:var(--accent); border-color:var(--accent); }
+.social-links { display:flex; gap:2rem; justify-content:center; list-style:none; }
+.social-links a {
+  font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); text-decoration:none; transition:color .2s;
+}
+.social-links a:hover { color:var(--text); }
+
+/* FOOTER */
+footer {
+  padding:2rem 3rem;
+  border-top:1px solid var(--border);
+  display:flex; justify-content:space-between;
+  align-items:center; flex-wrap:wrap; gap:1rem;
+}
+footer p { font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+
+/* REVEAL */
+.reveal { opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .7s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .work-featured { grid-template-columns:1fr; }
+  .work-grid { grid-template-columns:repeat(2,1fr); }
+  .about-inner { grid-template-columns:1fr; gap:3.5rem; }
+  .photo-accent { display:none; }
+}
+@media(max-width:768px){
+  nav { padding:1.25rem 1.5rem; }
+  .nav-links { display:none; }
+  .hero,.about-inner,#work,#services,#contact { padding-left:1.5rem; padding-right:1.5rem; }
+  #work { padding:5rem 1.5rem; }
+  #about { padding:5rem 1.5rem; }
+  #services { padding:5rem 1.5rem; }
+  #contact { padding:5rem 1.5rem; }
+  .work-grid { grid-template-columns:1fr; }
+  .service-item { grid-template-columns:50px 1fr; gap:1.5rem; }
+  .service-tags { display:none; }
+  .tools-grid { grid-template-columns:repeat(2,1fr); }
+  body { cursor:auto; }
+  .cursor,.cursor-ring { display:none; }
+  footer { padding:1.5rem; flex-direction:column; text-align:center; }
+}
+@media(max-width:480px){
+  .hero-title { font-size:2.8rem; }
+  .hero-bottom { flex-direction:column; align-items:flex-start; }
+  .section-header { flex-direction:column; align-items:flex-start; gap:.75rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Mikaela J. Parks</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact" class="cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-vline"></div>
+  <div class="hero-vline r"></div>
+  <p class="hero-eyebrow">2026 Portfolio</p>
+  <h1 class="hero-title">
+    Storytelling through<br>
+    <em>strategic</em><br>
+    <span class="dim">design.</span>
+  </h1>
+  <div class="hero-bottom">
+    <p class="hero-desc">Creating with purpose and passion.</p>
+    <a href="#work" class="hero-scroll"><span class="scroll-line"></span>View Work</a>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span>Brand Identity</span><span class="sep">✦</span>
+    <span>Web Design</span><span class="sep">✦</span>
+    <span>Video Production</span><span class="sep">✦</span>
+    <span>Copywriting</span><span class="sep">✦</span>
+    <span>Illustration</span><span class="sep">✦</span>
+    <span>Photography</span><span class="sep">✦</span>
+    <span>Digital Design</span><span class="sep">✦</span>
+    <span>Brand Identity</span><span class="sep">✦</span>
+    <span>Web Design</span><span class="sep">✦</span>
+    <span>Video Production</span><span class="sep">✦</span>
+    <span>Copywriting</span><span class="sep">✦</span>
+    <span>Illustration</span><span class="sep">✦</span>
+    <span>Photography</span><span class="sep">✦</span>
+    <span>Digital Design</span><span class="sep">✦</span>
+  </div>
+</div>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-header reveal">
+    <span class="section-tag">Selected Work</span>
+    <h2 class="section-title">Recent <em>projects</em></h2>
+  </div>
+
+  <!-- Featured 2-up -->
+  <div class="work-featured reveal">
+    <div class="work-card">
+      <!-- To use your own image: replace the div.work-ph below with:
+           <img class="work-img" src="your-image.jpg" alt="Project name"> -->
+      <div class="work-ph">
+        <span class="ph-label">Drop your Adobe design here</span>
+        <span class="ph-label" style="opacity:.4">Recommended: 1600 × 1200px</span>
+      </div>
+      <div class="cbr"></div>
+      <div class="work-overlay">
+        <div class="work-tags">
+          <span class="work-tag">Brand Identity</span>
+          <span class="work-tag">Illustrator</span>
+        </div>
+        <p class="work-name">Aura Studio — Brand System</p>
+        <p class="work-desc">Full identity refresh including logomark, type system, and color language.</p>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="work-ph">
+        <span class="ph-label">Drop your Adobe design here</span>
+        <span class="ph-label" style="opacity:.4">Recommended: 1600 × 1200px</span>
+      </div>
+      <div class="cbr"></div>
+      <div class="work-overlay">
+        <div class="work-tags">
+          <span class="work-tag">UI Design</span>
+          <span class="work-tag">XD / Figma</span>
+        </div>
+        <p class="work-name">Folio App — Interface Design</p>
+        <p class="work-desc">Mobile-first design system for a creative portfolio platform.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3-column grid -->
+  <div class="work-grid reveal">
+    <div class="work-card">
+      <div class="work-ph">
+        <span class="ph-label">Your design</span>
+      </div>
+      <div class="cbr"></div>
+      <div class="work-overlay">
+        <div class="work-tags"><span class="work-tag">Print</span><span class="work-tag">InDesign</span></div>
+        <p class="work-name">Meridian Magazine</p>
+        <p class="work-desc">Editorial layout and typographic system.</p>
+      </div>
+    </div>
+    <div class="work-card tall">
+      <div class="work-ph">
+        <span class="ph-label">Your design</span>
+      </div>
+      <div class="cbr"></div>
+      <div class="work-overlay">
+        <div class="work-tags"><span class="work-tag">Packaging</span><span class="work-tag">Illustrator</span></div>
+        <p class="work-name">Botanica — Packaging</p>
+        <p class="work-desc">Herbal skincare line across 12 SKUs.</p>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="work-ph">
+        <span class="ph-label">Your design</span>
+      </div>
+      <div class="cbr"></div>
+      <div class="work-overlay">
+        <div class="work-tags"><span class="work-tag">Motion</span><span class="work-tag">After Effects</span></div>
+        <p class="work-name">Luminary — Intro Sequence</p>
+        <p class="work-desc">Kinetic typography and logo animation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-photo reveal">
+      <div class="photo-wrap">
+        <img src="headshot.jpg" alt="Mikaela Parks">
+        <div class="photo-ph">My Photo</div>
+      </div>
+      <div class="photo-accent"></div>
+    </div>
+    <div class="about-text">
+      <div class="section-header reveal">
+        <span class="section-tag">About</span>
+        <h2 class="section-title">The <em>designer</em></h2>
+      </div>
+      <p class="reveal">I'm a data-driven strategic communicator with an eye for design, ready to make <em>your</em> dreams, a reality.</p>
+      <p class="reveal">With a BA in strategic communication from Washington State University, I have over four years of experience in creating photos, videos, posters, documents, presentations, and websites like this one.</p>
+      <p class="reveal">Located in Redmond, WA. Available for individual projects and full-time opportunities.</p>
+      <div class="tools-grid reveal">
+        <div class="tool-item"><span class="tool-icon">Ai</span><span class="tool-name">Illustrator</span></div>
+        <div class="tool-item"><span class="tool-icon">Ps</span><span class="tool-name">Photoshop</span></div>
+        <div class="tool-item"><span class="tool-icon">Id</span><span class="tool-name">InDesign</span></div>
+        <div class="tool-item"><span class="tool-icon">Pr</span><span class="tool-name">Premiere Pro</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header reveal">
+    <span class="section-tag">Services</span>
+    <h2 class="section-title">What I <em>offer</em></h2>
+  </div>
+  <div class="services-list">
+    <div class="service-item reveal">
+      <span class="service-num">01</span>
+      <span class="service-name">UI &amp; Digital Design</span>
+      <div class="service-tags"><span class="service-tag">Logo</span><span class="service-tag">Guidelines</span><span class="service-tag">System</span></div>
+    </div>
+    <div class="service-item reveal">
+      <span class="service-num">02</span>
+      <span class="service-name">Photography</span>
+      <div class="service-tags"><span class="service-tag">Web</span><span class="service-tag">Mobile</span><span class="service-tag">Prototype</span></div>
+    </div>
+    <div class="service-item reveal">
+      <span class="service-num">03</span>
+      <span class="service-name">Video Production</span>
+      <div class="service-tags"><span class="service-tag">Magazine</span><span class="service-tag">Packaging</span><span class="service-tag">Collateral</span></div>
+    </div>
+    <div class="service-item reveal">
+      <span class="service-num">04</span>
+      <span class="service-name">Brand Identity &amp; Strategy</span>
+      <div class="service-tags"><span class="service-tag">Titles</span><span class="service-tag">Explainer</span><span class="service-tag">Social</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-header reveal" style="justify-content:center">
+      <span class="section-tag">Contact</span>
+    </div>
+    <h2 class="contact-title reveal">It's better to create <em>together.</em></h2>
+    <p class="contact-sub reveal">Have a vision that you need help bringing to life? Please don't hesitate to reach out and let's discuss.</p>
+    <a href="mailto:mikaela.parks@outlook.com" class="contact-email reveal">mikaela.parks@outlook.com</a>
+    <ul class="social-links reveal">
+      <li><a href="https://www.instagram.com/mikaela.jop/">Instagram</a></li>
+      <li><a href="https://www.linkedin.com/in/mikaela-parks/">LinkedIn</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Mikaela Parks — All rights reserved</p>
+  <p>My ideas brought to life with Adobe</p>
+</footer>
+
+<script>
+// Custom cursor
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function tick(){
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+  rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(tick);
+})();
+document.querySelectorAll('a,.work-card,.service-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cur.style.width='14px'; cur.style.height='14px';
+    ring.style.width='56px'; ring.style.height='56px';
+    ring.style.borderColor='rgba(232,103,58,.7)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cur.style.width='8px'; cur.style.height='8px';
+    ring.style.width='36px'; ring.style.height='36px';
+    ring.style.borderColor='rgba(232,103,58,.4)';
+  });
+});
+
+// Scroll reveal with stagger
+const reveals = document.querySelectorAll('.reveal');
+new IntersectionObserver((entries,obs)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('visible'), i*70);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:.1}).observe && reveals.forEach(el=>{
+  new IntersectionObserver((entries,obs)=>{
+    if(entries[0].isIntersecting){ entries[0].target.classList.add('visible'); obs.unobserve(entries[0].target); }
+  },{threshold:.1}).observe(el);
+});
+</script>
+</body>
+</html>
